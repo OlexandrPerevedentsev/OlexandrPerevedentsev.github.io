@@ -1,0 +1,9 @@
+$(document).ready(function()
+	{
+        var d = new Date();
+		var n = d.getDay() -1; 
+        
+        $(".opening-times").find("ul").find("li").eq(n).addClass("today");
+        
+        $("#kl_tel").mask("(999) 999-99-99");
+    });

@@ -1,0 +1,58 @@
+$(document).ready(function(){
+		
+		$('.kmr-save-to-file').before('<div class="kmr-save-to-file-icon"><i class="fa fa-file-pdf-o fa-2x kmr-save-to-file-pdf" style="cursor:pointer;"></i><i class="fa fa-file-excel-o fa-2x kmr-save-to-file-xls" style="cursor:pointer;"></i></b>');
+		$('.kmr-save-to-file-pdf').click(function(){
+		
+		$("<div style='display:none;'></div>").replaceAll(".kmr-save-to-file td:hidden");
+
+		var title = $(this).parent().next().find(".csc-header").text();	
+		var content = $(this).parent().next().html();
+
+		
+				$.ajax({
+					type: "POST",
+					url: "fileadmin/system/template/plugins/files/save_to_file/kmrSaveToFilePdf.php",
+					data: ({title : title, content : content}),
+					success: function(value){
+							window.open("fileadmin/system/template/plugins/files/save_to_file/" + value, title, '');
+						}
+				});
+			});
+		$('.kmr-save-to-file-xls').click(function(){
+                	var trFirst = 0;
+			var tdFirst = 0;
+			var contentTd = "";
+			var content = '';
+                var title = $(this).parent().next().find(".csc-header").text();
+                var contentTableCountTr = $(this).parent().next().find("table").find(".tr-last").prev().prop('class').replace('tr-even tr-', '').replace('tr-odd tr-', '');
+                var contentTableCountTd = $(this).parent().next().find("table").find(".tr-0").find(".td-last").prop('class').replace('td-last td-', '');
+		var contentTableCountTr = Number(contentTableCountTr) + 1;
+
+                while (trFirst <= contentTableCountTr)
+					{
+						while (tdFirst <= contentTableCountTd)
+							{
+								if(trFirst == contentTableCountTr)
+									{var contentUnitTd = $(this).parent().next().find("table").find(".tr-last").find(".td-" + tdFirst).text();} else {var contentUnitTd = $(this).parent().next().find("table").find(".tr-" + trFirst).find(".td-" + tdFirst).text();}
+								var contentTd = contentTd + "|" + contentUnitTd;
+								tdFirst++;
+							}
+							var content = content + "%" + contentTd;
+							var contentTd = "";
+							var tdFirst = 0;
+							trFirst++;
+					}
+
+                                $.ajax({
+                                        type: "POST",
+                                        url: "fileadmin/system/template/plugins/files/save_to_file/kmrSaveToFileXls.php",
+                                        data: ({title : title, content : content}),
+                                        success: function(value){
+                                                        window.open("fileadmin/system/template/plugins/files/save_to_file/" + value, title, '');
+                                                }
+                                });
+                        });
+
+				
+	});
+	
